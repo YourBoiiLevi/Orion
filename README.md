@@ -52,6 +52,7 @@ Then type a chat prompt:
 | `OPENAI_BASE_URL` | `https://integrate.api.nvidia.com/v1` | Any OpenAI-compatible base URL. |
 | `OPENAI_MODEL` | `z-ai/glm-5.2` | Chat completions model name. |
 | `OPENAI_TIMEOUT_MS` | `180000` | Chat completion timeout. GLM 5.2 can be slow on the free endpoint. |
+| `OPENAI_POLL_INTERVAL_MS` | `1000` | Poll interval for NVIDIA HTTP 202 pending responses. |
 | `MC_WS_HOST` | `0.0.0.0` | Local WebSocket bind host. |
 | `MC_WS_PORT` | `3000` | Local WebSocket port. |
 | `MC_AI_PREFIX` | `!ai` | Chat trigger prefix. |

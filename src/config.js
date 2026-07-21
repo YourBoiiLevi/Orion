@@ -66,7 +66,8 @@ export function loadConfig(env = process.env) {
       temperature: parseFloatValue(env.OPENAI_TEMPERATURE, 0.3, { min: 0, max: 1 }),
       topP: parseFloatValue(env.OPENAI_TOP_P, 1, { min: 0, max: 1 }),
       maxTokens: parseInteger(env.OPENAI_MAX_TOKENS, 4096, { min: 1, max: 32768 }),
-      timeoutMs: parseInteger(env.OPENAI_TIMEOUT_MS, 180_000, { min: 1000, max: 600_000 })
+      timeoutMs: parseInteger(env.OPENAI_TIMEOUT_MS, 180_000, { min: 1000, max: 600_000 }),
+      pollIntervalMs: parseInteger(env.OPENAI_POLL_INTERVAL_MS, 1000, { min: 100, max: 60_000 })
     },
     behavior: {
       commandPrefix: env.MC_AI_PREFIX || "!ai",

@@ -65,6 +65,53 @@ test("ChatCompletionsClient can include provider-specific OpenAI-compatible exte
   assert.equal(capturedBody.model, "deepseek-ai/deepseek-v4-pro");
 });
 
+test("ChatCompletionsClient polls NVIDIA status results when chat completions returns HTTP 202", async () => {
+  const calls = [];
+  const fetchImpl = async (url, request) => {
+    calls.push({ url, request });
+    if (String(url).endsWith("/chat/completions")) {
+      return new Response(JSON.stringify({ requestId: "request-1" }), { status: 202 });
+    }
+
+    return new Response(
+      JSON.stringify({
+        choices: [{ message: { content: "setblock ~ ~ ~ stone" } }]
+      }),
+      { status: 200 }
+    );
+  };
+
+  const client = new ChatCompletionsClient({
+    apiKey: "test-key",
+    baseUrl: "https://integrate.api.nvidia.com/v1",
+    model: "z-ai/glm-5.2",
+    pollIntervalMs: 1,
+    fetchImpl
+  });
+
+  const content = await client.createCommandText("build a stone marker");
+
+  assert.equal(content, "setblock ~ ~ ~ stone");
+  assert.equal(calls.length, 2);
+  assert.equal(calls[1].url, "https://integrate.api.nvidia.com/v1/status/request-1");
+  assert.equal(calls[1].request.method, "GET");
+});
+
+test("ChatCompletionsClient rejects HTTP 202 responses without a request id", async () => {
+  const fetchImpl = async () => new Response(JSON.stringify({ status: "pending" }), { status: 202 });
+  const client = new ChatCompletionsClient({
+    apiKey: "test-key",
+    baseUrl: "https://integrate.api.nvidia.com/v1",
+    model: "z-ai/glm-5.2",
+    fetchImpl
+  });
+
+  await assert.rejects(
+    () => client.createCommandText("build a stone marker"),
+    /HTTP 202 without a requestId/
+  );
+});
+
 test("redactProviderError removes account ids and bearer tokens from provider errors", () => {
   const redacted = redactProviderError("Not found for account 'abc123' using Bearer nvapi-secret");
 
