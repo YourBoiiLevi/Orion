@@ -1,0 +1,20 @@
+{
+  "name": "orion-minecraft-ai-bridge",
+  "version": "0.1.0",
+  "description": "A local Minecraft Bedrock WebSocket bridge that turns !ai chat prompts into queued Minecraft commands via an OpenAI-compatible API.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test test/commandQueue.test.js test/env.test.js test/llmDiagnostics.test.js test/modelClient.test.js test/protocol.test.js",
+    "test:llm": "node --test test/llm.integration.test.js",
+    "llm:diagnose": "node scripts/llm-diagnostics.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
