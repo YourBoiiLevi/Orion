@@ -96,3 +96,14 @@ export function findModelProfiles(selection = "all", profiles = NIM_LLM_MODEL_PR
     return profile;
   });
 }
+
+export function findModelProfileByModel(model, profiles = NIM_LLM_MODEL_PROFILES) {
+  const normalized = String(model ?? "").trim().toLowerCase();
+  if (!normalized) return null;
+
+  return profiles.find((profile) => (
+    profile.id.toLowerCase() === normalized ||
+    profile.model.toLowerCase() === normalized ||
+    profile.label.toLowerCase() === normalized
+  )) ?? null;
+}

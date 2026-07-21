@@ -12,7 +12,8 @@
     "dev": "node --watch src/index.js",
     "test": "node --test test/commandQueue.test.js test/env.test.js test/llmDiagnostics.test.js test/modelClient.test.js test/protocol.test.js",
     "test:llm": "node --test test/llm.integration.test.js",
-    "llm:diagnose": "node scripts/llm-diagnostics.js"
+    "llm:diagnose": "node scripts/llm-diagnostics.js",
+    "simulate:ai": "node scripts/simulate-ai-prompt.js"
   },
   "dependencies": {
     "ws": "^8.18.0"

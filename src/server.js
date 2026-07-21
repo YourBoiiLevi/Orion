@@ -103,7 +103,10 @@ export class MinecraftAiBridge {
     this.#enqueueStatus(queue, `AI is planning: ${sender}${prompt}`);
 
     try {
+      const startedAt = Date.now();
       const rawCommands = await this.modelClient.createCommandText(prompt);
+      const modelElapsedMs = Date.now() - startedAt;
+      this.logger.info(`AI model returned ${rawCommands.length} character(s) in ${modelElapsedMs}ms.`);
       const { commands, rejected } = sanitizeCommands(rawCommands, {
         blockedCommands: this.config.behavior.blockedCommands,
         allowedCommands: this.config.behavior.allowedCommands

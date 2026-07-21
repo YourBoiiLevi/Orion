@@ -22,6 +22,23 @@ function extractRequestId(payload, response) {
   );
 }
 
+function elapsedMs(startedAt) {
+  return Date.now() - startedAt;
+}
+
+function summarizeRequestBody(bodyText) {
+  const body = JSON.parse(bodyText);
+  return {
+    model: body.model,
+    messageCount: Array.isArray(body.messages) ? body.messages.length : 0,
+    maxTokens: body.max_tokens,
+    temperature: body.temperature,
+    topP: body.top_p,
+    stream: body.stream,
+    extraFields: Object.keys(body).filter((key) => !["model", "messages", "temperature", "top_p", "max_tokens", "stream"].includes(key)).sort()
+  };
+}
+
 export class ChatCompletionsClient {
   constructor({
     apiKey,
@@ -33,6 +50,8 @@ export class ChatCompletionsClient {
     timeoutMs = 120_000,
     pollIntervalMs = 1000,
     extraBody = {},
+    logger = console,
+    debug = false,
     fetchImpl = globalThis.fetch
   }) {
     this.apiKey = apiKey;
@@ -44,6 +63,8 @@ export class ChatCompletionsClient {
     this.timeoutMs = timeoutMs;
     this.pollIntervalMs = pollIntervalMs;
     this.extraBody = extraBody;
+    this.logger = logger;
+    this.debug = debug;
     this.fetchImpl = fetchImpl;
   }
 
@@ -65,6 +86,23 @@ export class ChatCompletionsClient {
 
     const deadline = Date.now() + this.timeoutMs;
 
+    const requestBody = JSON.stringify({
+      ...this.extraBody,
+      ...extraBody,
+      model,
+      messages,
+      temperature,
+      top_p: topP,
+      max_tokens: maxTokens,
+      stream
+    });
+
+    this.#debug("Chat completion request", {
+      url: `${this.baseUrl}/chat/completions`,
+      ...summarizeRequestBody(requestBody)
+    });
+
+    const requestStartedAt = Date.now();
     const { response, responseText, payload } = await this.#fetchJson(`${this.baseUrl}/chat/completions`, {
         method: "POST",
         headers: {
@@ -72,19 +110,18 @@ export class ChatCompletionsClient {
           "Content-Type": "application/json",
           Accept: "application/json"
         },
-        body: JSON.stringify({
-          ...this.extraBody,
-          ...extraBody,
-          model,
-          messages,
-          temperature,
-          top_p: topP,
-          max_tokens: maxTokens,
-          stream
-        })
+        body: requestBody
       },
       deadline
     );
+
+    this.#debug("Chat completion response", {
+      status: response.status,
+      elapsedMs: elapsedMs(requestStartedAt),
+      responseBytes: responseText.length,
+      responseModel: payload?.model ?? null,
+      finishReason: payload?.choices?.[0]?.finish_reason ?? null
+    });
 
     if (response.status === 202) {
       const requestId = extractRequestId(payload, response);
@@ -120,9 +157,11 @@ export class ChatCompletionsClient {
   }
 
   async #pollStatus(requestId, deadline) {
+    this.#debug("Chat completion entered pending status", { requestId });
     while (Date.now() < deadline) {
       await sleep(Math.min(this.pollIntervalMs, Math.max(0, deadline - Date.now())));
 
+      const pollStartedAt = Date.now();
       const { response, responseText, payload } = await this.#fetchJson(
         `${this.baseUrl}/status/${encodeURIComponent(requestId)}`,
         {
@@ -134,6 +173,13 @@ export class ChatCompletionsClient {
         },
         deadline
       );
+
+      this.#debug("Chat completion status poll response", {
+        requestId,
+        status: response.status,
+        elapsedMs: elapsedMs(pollStartedAt),
+        responseBytes: responseText.length
+      });
 
       if (response.status === 202) continue;
       if (!response.ok) {
@@ -180,5 +226,10 @@ export class ChatCompletionsClient {
     } finally {
       clearTimeout(timeout);
     }
+  }
+
+  #debug(message, meta = {}) {
+    if (!this.debug) return;
+    this.logger.info(`[llm] ${message}`, meta);
   }
 }

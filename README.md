@@ -51,8 +51,11 @@ Then type a chat prompt:
 | `NVIDIA_API_KEY` | empty | API key for NVIDIA's hosted NIM endpoint. |
 | `OPENAI_BASE_URL` | `https://integrate.api.nvidia.com/v1` | Any OpenAI-compatible base URL. |
 | `OPENAI_MODEL` | `z-ai/glm-5.2` | Chat completions model name. |
-| `OPENAI_TIMEOUT_MS` | `180000` | Chat completion timeout. GLM 5.2 can be slow on the free endpoint. |
+| `OPENAI_USE_PROVIDER_EXTRAS` | `true` | Applies known NVIDIA model profile fields such as disabled reasoning where available. |
+| `OPENAI_MAX_TOKENS` | `4096` | Completion budget for generated command lists. |
+| `OPENAI_TIMEOUT_MS` | `600000` | Chat completion timeout. Large builds on free NIM endpoints can take several minutes. |
 | `OPENAI_POLL_INTERVAL_MS` | `1000` | Poll interval for NVIDIA HTTP 202 pending responses. |
+| `DEBUG_LLM` | `false` | Logs sanitized request/response timing metadata. |
 | `MC_WS_HOST` | `0.0.0.0` | Local WebSocket bind host. |
 | `MC_WS_PORT` | `3000` | Local WebSocket port. |
 | `MC_AI_PREFIX` | `!ai` | Chat trigger prefix. |
@@ -95,6 +98,14 @@ npm run llm:diagnose -- --models kimi-k2.6 --minimal
 ```
 
 The live checks use `NVIDIA_API_KEY` from `.env`, call `POST /v1/chat/completions`, validate that each model returns OpenAI-compatible `choices[0].message.content`, and run the response through the same command parser used by the Minecraft bridge. Reports include latency, success rate, parser compatibility, finish reason, token usage when available, and first parsed command. They never include your API key, and provider account identifiers in error bodies are redacted.
+
+Simulate the Minecraft AI path without connecting Minecraft:
+
+```powershell
+npm run simulate:ai -- --prompt "build me a cozy spruce house"
+```
+
+Add `--raw` to print the raw model output before parser cleanup.
 
 Run with auto-restart:
 
