@@ -1,110 +1,112 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Server, Zap, Shield, Cpu, Activity, ArrowRight } from 'lucide-react'
+import { Server, Shield, Cpu, Activity, ArrowRight, Blocks } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-[calc(100vh-200px)]">
-      
-      {/* Newspaper Top Fold */}
+    <div className="flex flex-col">
+
+      {/* Hero Section */}
       <section className="grid grid-cols-1 md:grid-cols-12 border-b-4 border-industrial-black">
         <div className="md:col-span-8 border-b-2 md:border-b-0 md:border-r-2 border-industrial-black p-8 md:p-12 relative overflow-hidden group">
           <div className="relative z-10">
             <h2 className="text-4xl md:text-6xl font-masthead font-black mb-6 uppercase leading-tight">
-              How America's Industrial Core Is Coming Back Online
+              Build With AI,<br />Inside Minecraft.
             </h2>
-            <p className="text-lg font-mono font-bold uppercase mb-4 opacity-80">
-              &gt;&gt;&gt; Rebuilding The Machine
-            </p>
             <p className="text-base font-ui max-w-2xl leading-relaxed">
-              A silent revolution is underway. From Austin to Youngstown, new factories, chip fabs, and AI defense startups are redefining what it means to build in America. After decades of offshoring, production is returning home, powered by automation, robotics, and a new generation of engineers who see industrial revival not as nostalgia, but as national strategy.
+              Orion is a local WebSocket bridge for Minecraft Bedrock Edition. It listens for
+              in-game <code className="bg-industrial-black text-white px-1.5 py-0.5 text-sm">!ai</code> chat
+              prompts, sends them to an OpenAI-compatible LLM, and executes the generated
+              Bedrock commands through a bounded, rate-limited queue.
             </p>
-            <p className="text-base font-ui max-w-2xl leading-relaxed mt-4">
-              <strong>Orion Project</strong> stands at the forefront of this digital infrastructure. A local WebSocket bridge for Minecraft Bedrock Edition, connecting the physical simulation environment with OpenAI-compatible intelligence.
+            <p className="text-base font-ui max-w-2xl leading-relaxed mt-4 opacity-80">
+              Type a prompt. Watch it build. No mods, no plugins — just a WebSocket and an API key.
             </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link to="/docs" className="inline-flex items-center gap-2 bg-industrial-red text-white px-6 py-3 font-mono font-bold text-sm uppercase tracking-wider hover:bg-industrial-black transition-colors">
+                Get Started <ArrowRight size={16} />
+              </Link>
+              <a href="https://github.com/YourBoiiLevi/Orion" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 border-2 border-industrial-black px-6 py-3 font-mono font-bold text-sm uppercase tracking-wider hover:bg-industrial-black hover:text-white transition-colors">
+                View Source
+              </a>
+            </div>
           </div>
-          
-          <div className="absolute top-10 right-10 opacity-10 font-mono text-9xl font-black pointer-events-none transform -rotate-12 group-hover:rotate-0 transition-transform duration-1000">
-            [O]
+
+          {/* Background watermark */}
+          <div className="absolute top-6 right-6 opacity-[0.04] font-mono text-[12rem] font-black pointer-events-none leading-none select-none transform group-hover:scale-105 transition-transform duration-1000">
+            ⛏
           </div>
         </div>
-        
+
+        {/* Sidebar quick info */}
         <div className="md:col-span-4 p-8 flex flex-col justify-between bg-industrial-black text-industrial-bg relative">
-           <div>
-             <h3 className="font-mono text-xl font-bold uppercase mb-4 border-b border-industrial-bg pb-2">
-               System Status
-             </h3>
-             <ul className="font-mono text-sm space-y-2 uppercase">
-               <li className="flex justify-between"><span>Core Logic</span> <span className="text-green-400">[ STABLE ]</span></li>
-               <li className="flex justify-between"><span>WebSocket</span> <span className="text-green-400">[ ONLINE ]</span></li>
-               <li className="flex justify-between"><span>Command Queue</span> <span className="text-yellow-400">[ READY ]</span></li>
-               <li className="flex justify-between"><span>AI Link</span> <span className="text-industrial-red">[ WAITING ]</span></li>
-             </ul>
-           </div>
-           
-           <div className="mt-12 text-center">
-             <div className="text-xs font-mono uppercase tracking-widest mb-2 opacity-50">Initialize Sequence</div>
-             <Link to="/docs" className="inline-flex items-center gap-2 bg-industrial-red text-white px-6 py-4 font-bold uppercase tracking-wider hover:bg-white hover:text-industrial-red transition-colors border-2 border-transparent hover:border-industrial-red">
-               Commence Build <ArrowRight size={18} />
-             </Link>
-           </div>
+          <div>
+            <h3 className="font-mono text-sm font-bold uppercase mb-4 border-b border-industrial-bg/30 pb-2 tracking-wider">
+              At a Glance
+            </h3>
+            <ul className="font-mono text-sm space-y-3">
+              <li className="flex justify-between"><span className="opacity-70">Runtime</span> <span>Node.js &gt;=20</span></li>
+              <li className="flex justify-between"><span className="opacity-70">Protocol</span> <span>Bedrock WebSocket</span></li>
+              <li className="flex justify-between"><span className="opacity-70">Default LLM</span> <span>GLM 5.2 (NIM)</span></li>
+              <li className="flex justify-between"><span className="opacity-70">Dependencies</span> <span>1 (ws)</span></li>
+              <li className="flex justify-between"><span className="opacity-70">License</span> <span>MIT</span></li>
+            </ul>
+          </div>
+
+          <div className="mt-8 p-4 border border-industrial-bg/20 font-mono text-xs">
+            <div className="text-industrial-red font-bold uppercase mb-1">Quick Start</div>
+            <pre className="text-industrial-bg/80 leading-relaxed">npm install{'\n'}cp .env.example .env{'\n'}npm start</pre>
+          </div>
         </div>
       </section>
 
-      {/* Blueprint Data Section */}
+      {/* Features */}
       <section className="p-8 md:p-12">
-        <div className="flex justify-between items-end border-b-2 border-industrial-black pb-4 mb-8">
-          <h2 className="text-2xl md:text-3xl font-masthead font-bold uppercase">Technical Schematics</h2>
-          <span className="font-mono text-sm font-bold uppercase opacity-60">P. 05</span>
+        <div className="flex justify-between items-end border-b-2 border-industrial-black pb-3 mb-8">
+          <h2 className="text-2xl md:text-3xl font-masthead font-bold uppercase">How It Works</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <FeatureCard 
+          <FeatureCard
             icon={<Server />}
-            title="Local WebSocket"
-            desc="Bedrock /wsserver connects directly to your local instance. No external tunneling required for core execution."
+            title="WebSocket Bridge"
+            desc="Minecraft connects via /connect. The bridge subscribes to PlayerMessage events and forwards AI-triggered prompts."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<Cpu />}
-            title="NVIDIA NIM Default"
-            desc="Pre-configured for z-ai/glm-5.2 via NVIDIA's integrate API. Compatible with any OpenAI Chat completions endpoint."
+            title="LLM Integration"
+            desc="Any OpenAI-compatible endpoint works. Default is NVIDIA NIM's free GLM-5.2 API with built-in model profiles."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<Activity />}
-            title="Bounded Queue"
-            desc="Tracks command responses and keeps in-flight commands below a configurable cap to prevent server rejection."
+            title="Command Queue"
+            desc="A bounded queue tracks in-flight commands and drains them at a configurable rate to avoid Bedrock rejection."
           />
-          <FeatureCard 
+          <FeatureCard
             icon={<Shield />}
-            title="Sanitized Execution"
-            desc="Strict parser blocks harmful commands and strips markdown/comments before sending to the Minecraft protocol."
+            title="Command Sanitizer"
+            desc="Strips markdown fences, comments, and thinking tags. Blocks admin commands. Validates against an allowlist."
           />
         </div>
       </section>
-      
-      {/* Decorative Blueprint Image Placeholder */}
+
+      {/* Architecture diagram placeholder */}
       <section className="px-8 pb-12">
-        <div className="w-full h-48 border-2 border-industrial-black bg-industrial-black text-industrial-bg flex flex-col items-center justify-center relative overflow-hidden group">
-           {/* Grid overlay */}
-           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxwYXRoIGQ9Ik0gMjAgMCBMIDAgMCBMIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')]"></div>
-           
-           <div className="relative z-10 flex items-center justify-center">
-             <motion.div 
-               animate={{ rotate: 360 }}
-               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-               className="w-24 h-24 border-4 border-dashed border-industrial-bg rounded-full flex items-center justify-center"
-             >
-                <div className="w-12 h-12 border-2 border-industrial-red rounded-sm rotate-45"></div>
-             </motion.div>
-           </div>
-           
-           <div className="absolute bottom-4 right-4 font-mono text-xs uppercase tracking-widest">
-             (LOADING SCHEMATIC...)
-           </div>
-           <div className="absolute top-4 left-4 font-mono text-[10px] uppercase">
-             FIG 1. CORE ARCHITECTURE
-           </div>
+        <div className="w-full border-2 border-industrial-black bg-industrial-black text-industrial-bg p-8 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxwYXRoIGQ9Ik0gMjAgMCBMIDAgMCBMIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjA4KSIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPg==')]"></div>
+
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 font-mono text-sm uppercase">
+            <FlowNode label="Minecraft Bedrock" sub="/connect localhost:3000" />
+            <FlowArrow />
+            <FlowNode label="Orion Bridge" sub="WebSocket Server" highlight />
+            <FlowArrow />
+            <FlowNode label="LLM API" sub="OpenAI-compatible" />
+          </div>
+
+          <div className="absolute bottom-3 right-4 font-mono text-[10px] uppercase tracking-widest opacity-30">
+            FIG 1. DATA FLOW
+          </div>
         </div>
       </section>
 
@@ -114,18 +116,27 @@ export default function Home() {
 
 function FeatureCard({ icon, title, desc }) {
   return (
-    <div className="border-2 border-industrial-black p-6 hover:bg-industrial-black hover:text-industrial-bg transition-colors group relative clip-chamfer-bottom bg-white">
+    <div className="border-2 border-industrial-black p-6 hover:bg-industrial-black hover:text-industrial-bg transition-colors group relative bg-white">
       <div className="mb-4 text-industrial-red group-hover:text-white transition-colors">
-        {React.cloneElement(icon, { size: 32, strokeWidth: 1.5 })}
+        {React.cloneElement(icon, { size: 28, strokeWidth: 1.5 })}
       </div>
-      <h4 className="font-mono font-bold uppercase mb-2">{title}</h4>
+      <h4 className="font-mono font-bold uppercase text-sm mb-2">{title}</h4>
       <p className="font-ui text-sm opacity-80">{desc}</p>
-      
-      {/* Decorative crosshair */}
-      <div className="absolute top-2 right-2 w-4 h-4 border border-industrial-black opacity-30 group-hover:border-industrial-bg">
-        <div className="absolute top-1/2 left-0 w-full h-px bg-industrial-black group-hover:bg-industrial-bg"></div>
-        <div className="absolute left-1/2 top-0 h-full w-px bg-industrial-black group-hover:bg-industrial-bg"></div>
-      </div>
     </div>
+  )
+}
+
+function FlowNode({ label, sub, highlight }) {
+  return (
+    <div className={`border-2 ${highlight ? 'border-industrial-red text-industrial-red' : 'border-industrial-bg/40'} px-6 py-4 text-center min-w-[160px]`}>
+      <div className="font-bold text-xs">{label}</div>
+      <div className="text-[10px] opacity-60 mt-1">{sub}</div>
+    </div>
+  )
+}
+
+function FlowArrow() {
+  return (
+    <div className="font-mono text-industrial-red text-lg hidden md:block">→</div>
   )
 }

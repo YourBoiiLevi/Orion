@@ -1,11 +1,18 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Terminal, Box, Cog, Menu, X, Rocket } from 'lucide-react'
+import { Terminal } from 'lucide-react'
+
+const NAV_ITEMS = [
+  { to: '/', label: 'Overview' },
+  { to: '/docs', label: 'Quickstart' },
+  { to: '/docs/architecture', label: 'Architecture' },
+  { to: '/docs/development', label: 'Development' },
+  { to: '/docs/research', label: 'Research' },
+]
 
 export function Layout({ children }) {
-  const [menuOpen, setMenuOpen] = React.useState(false)
   const location = useLocation()
-  
+
   const [easterEgg, setEasterEgg] = React.useState(false)
 
   React.useEffect(() => {
@@ -15,7 +22,7 @@ export function Layout({ children }) {
       if (keys.length > 9) keys.shift()
       if (keys.join('').includes('minecraft')) {
         setEasterEgg(true)
-        setTimeout(() => setEasterEgg(false), 5000)
+        setTimeout(() => setEasterEgg(false), 3000)
         keys = []
       }
     }
@@ -25,90 +32,67 @@ export function Layout({ children }) {
 
   return (
     <div className={`min-h-screen bg-industrial-bg text-industrial-black flex flex-col font-ui border-8 border-industrial-black ${easterEgg ? 'animate-pulse' : ''}`}>
-      {/* Top Bar - Newspaper Style */}
+      {/* Header */}
       <header className="border-b-4 border-industrial-black bg-industrial-bg relative z-20">
-        <div className="flex justify-between items-center border-b border-industrial-black px-4 py-1 text-xs font-mono uppercase font-bold tracking-widest">
-          <span>Field Report</span>
-          <span>The Paper of Record for the New Industrial Age</span>
-          <span className="flex items-center gap-2"><Terminal size={14}/> U.S.A</span>
-        </div>
-        
-        <div className="px-6 py-8 flex flex-col lg:flex-row justify-between items-center gap-6 text-center lg:text-left relative">
-          <div className="flex-1">
-            <h1 className="text-5xl md:text-7xl font-masthead font-black tracking-tighter uppercase leading-none">
-              The Artificial Times
-            </h1>
-            <p className="mt-2 font-mono text-sm uppercase tracking-wider font-bold">
-              Volume 1. Issue 1 • Special Report: Orion Project
-            </p>
-          </div>
-          
-          <div className="hidden lg:block w-64 h-32 border-2 border-industrial-black bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxwYXRoIGQ9Ik0gMjAgMCBMIDAgMCBMIDAgMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzExMSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KPC9zdmc+')] clip-chamfer relative overflow-hidden group cursor-crosshair">
-             <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 transition-opacity bg-industrial-black text-industrial-bg">
-                <Rocket className="w-12 h-12 animate-bounce" />
-             </div>
-             <div className="absolute inset-0 border-[4px] border-industrial-red pointer-events-none mix-blend-multiply"></div>
-          </div>
+        {/* Top utility bar */}
+        <div className="flex justify-between items-center border-b border-industrial-black px-4 py-1 text-[10px] font-mono uppercase font-bold tracking-widest">
+          <span>Technical Documentation</span>
+          <span className="hidden md:inline">Orion Minecraft AI Bridge</span>
+          <span className="flex items-center gap-1.5"><Terminal size={12} /> v0.1.0</span>
         </div>
 
-        {/* Navigation Grid */}
-        <nav className="grid grid-cols-2 md:grid-cols-4 border-t-4 border-industrial-black font-mono text-sm uppercase font-bold text-center">
-          <Link to="/" className={`block py-3 border-r-2 border-b-2 md:border-b-0 border-industrial-black hover:bg-industrial-red hover:text-white transition-colors ${location.pathname === '/' ? 'bg-industrial-black text-white' : ''}`}>
-            Front Page
+        {/* Project Title */}
+        <div className="px-6 py-6 flex justify-between items-center">
+          <Link to="/" className="group">
+            <h1 className="text-4xl md:text-5xl font-masthead font-black tracking-tighter uppercase leading-none group-hover:text-industrial-red transition-colors">
+              Orion
+            </h1>
+            <p className="mt-1 font-mono text-xs uppercase tracking-wider font-bold opacity-60">
+              Minecraft Bedrock AI Bridge
+            </p>
           </Link>
-          <Link to="/docs" className={`block py-3 border-r-0 md:border-r-2 border-b-2 md:border-b-0 border-industrial-black hover:bg-industrial-red hover:text-white transition-colors ${location.pathname === '/docs' ? 'bg-industrial-black text-white' : ''}`}>
-            Documentation
-          </Link>
-          <a href="https://github.com/YourBoiiLevi/Orion" target="_blank" rel="noreferrer" className="block py-3 border-r-2 border-industrial-black hover:bg-industrial-black hover:text-white transition-colors">
-            Blueprint (GitHub)
+
+          <a
+            href="https://github.com/YourBoiiLevi/Orion"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden md:flex items-center gap-2 border-2 border-industrial-black px-4 py-2 font-mono text-xs uppercase font-bold hover:bg-industrial-black hover:text-white transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg> View on GitHub
           </a>
-          <a href="#" className="block py-3 hover:bg-industrial-black hover:text-white transition-colors relative overflow-hidden group">
-            <span className="relative z-10">Status: Online</span>
-            <div className="absolute inset-0 bg-industrial-red transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-in-out"></div>
-          </a>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex overflow-x-auto border-t-2 border-industrial-black font-mono text-xs uppercase font-bold">
+          {NAV_ITEMS.map((item, i) => {
+            const isActive = item.to === '/'
+              ? location.pathname === '/'
+              : location.pathname === item.to || location.pathname.startsWith(item.to + '/')
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`flex-shrink-0 px-5 py-3 border-r border-industrial-black hover:bg-industrial-red hover:text-white transition-colors ${isActive ? 'bg-industrial-black text-white' : ''}`}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
         </nav>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col md:flex-row relative">
-        {/* Left Grid Gutter */}
-        <aside className="hidden xl:flex w-16 border-r-2 border-industrial-black flex-col items-center py-4 gap-8">
-           <div className="w-8 h-8 border-2 border-industrial-black rounded-full flex items-center justify-center font-mono text-xs">N</div>
-           <div className="w-8 h-8 border-2 border-industrial-black rounded-full flex items-center justify-center font-mono text-xs bg-industrial-red text-white">Y</div>
-           <div className="w-8 h-8 border-2 border-industrial-black rounded-full flex items-center justify-center font-mono text-xs">C</div>
-           <div className="flex-1 w-px bg-industrial-black"></div>
-        </aside>
-
-        <div className="flex-1 w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCBMIDAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPg==')] relative">
+      {/* Main */}
+      <main className="flex-1 relative">
+        <div className="bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCBMIDAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgwLDAsMCwwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+Cjwvc3ZnPg==')]">
           {children}
         </div>
-
-        {/* Right Grid Gutter */}
-        <aside className="hidden xl:flex w-16 border-l-2 border-industrial-black flex-col items-center py-4 font-mono text-[10px] uppercase writing-vertical-rl rotate-180">
-          <span className="tracking-[0.2em] opacity-50">SYS.LOC :: ACTIVE</span>
-          <span className="tracking-[0.2em] opacity-50 mt-4">SEQ.001</span>
-        </aside>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-4 border-industrial-black bg-industrial-black text-industrial-bg p-6 font-mono text-xs uppercase grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <h4 className="font-bold mb-2 flex items-center gap-2"><Cog size={16}/> Project Built to Perform for Decades.</h4>
-          <p className="opacity-70">Orion Minecraft AI Bridge is an open-source initiative bridging local infrastructure with intelligent systems.</p>
-        </div>
-        <div className="md:text-center">
-          <div className="inline-block border border-industrial-bg p-2 text-center">
-            <span className="block font-bold">WARNING</span>
-            <span className="block opacity-70">Industrial Grade Equipment</span>
-          </div>
-        </div>
-        <div className="md:text-right">
-          <p>© {new Date().getFullYear()} The Artificial Times.</p>
-          <p className="opacity-70 mt-1">Printed in U.S.A.</p>
-          <div className="mt-4 flex justify-end">
-            <div className="w-24 h-8 bg-industrial-bg"></div> {/* Barcode placeholder */}
-          </div>
-        </div>
+      {/* Minimal Footer */}
+      <footer className="border-t-4 border-industrial-black bg-industrial-black text-industrial-bg px-6 py-3 font-mono text-[10px] uppercase flex justify-between items-center tracking-wider">
+        <span>© {new Date().getFullYear()} Orion Project</span>
+        <span className="opacity-50">Open Source · MIT</span>
+        <span className="opacity-50">Node &gt;=20 · ws</span>
       </footer>
     </div>
   )
